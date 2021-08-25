@@ -7,19 +7,11 @@ import (
 
 func main() {
 	err := godotenv.Load()
-	checkerr(err)
-
-	//var wg sync.WaitGroup
-	//wg.Add(1)
-	//go serve(&wg)
-	//wg.Wait()
-
-	//clone("./test", "git@github.com:fgh151/shop-engine.git")
-
-	up("./test")
+	checkErr(err)
+	serve()
 }
 
-func checkerr(err error) {
+func checkErr(err error) {
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -10,7 +10,7 @@ import (
 func clone(toDir string, gitUrl string) *git.Repository {
 
 	auth, err := ssh.NewPublicKeysFromFile("git", os.Getenv("GIT_SSH_PRIVATE_KEY"), "")
-	checkerr(err)
+	checkErr(err)
 
 	r, err := git.PlainClone(toDir, false, &git.CloneOptions{
 		URL:      gitUrl,
@@ -18,7 +18,7 @@ func clone(toDir string, gitUrl string) *git.Repository {
 		Auth:     auth,
 	})
 
-	checkerr(err)
+	checkErr(err)
 
 	return r
 }

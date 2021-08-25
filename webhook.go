@@ -5,7 +5,7 @@ import (
 	"github.com/go-playground/webhooks/v6/github"
 	"net/http"
 	"os"
-	"sync"
+	"strings"
 )
 
 const (
@@ -13,8 +13,7 @@ const (
 )
 
 //goland:noinspection GoUnusedFunction
-func serve(wg *sync.WaitGroup) {
-	defer wg.Done()
+func serve() {
 
 	hook, _ := github.New(github.Options.Secret(os.Getenv("SERVER_GITHUB_SECRET")))
 
@@ -46,11 +45,19 @@ func serve(wg *sync.WaitGroup) {
 
 			fmt.Printf("%+v", push.Ref)
 
+			path := push.Repository.Name + "/" + extractTagFromRef(push.Ref)
+			clone(path, push.Repository.GitURL)
+			ComposeUp(path)
+
 		default:
 			fmt.Println(payload)
-
 		}
 	})
 	err := http.ListenAndServe(":"+os.Getenv("SERVER_PORT"), nil)
-	checkerr(err)
+	checkErr(err)
+}
+
+func extractTagFromRef(ref string) string {
+	s := strings.Split(ref, "/")
+	return s[len(s)-1]
 }

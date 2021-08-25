@@ -8,9 +8,11 @@ import (
 	"os/exec"
 )
 
-func up(path string) {
+func ComposeUp(path string) {
 
 	createEnvFile(path)
+
+	runCommand("docker-compose", "--project-directory", path, "down", "-v")
 
 	var args []string
 
@@ -24,14 +26,18 @@ func up(path string) {
 
 	args = append(args, "--project-directory")
 	args = append(args, path)
-	args = append(args, "up")
+	args = append(args, "ComposeUp")
 	args = append(args, "-d")
 
-	cmd := exec.Command("docker-compose", args...)
+	runCommand("docker-compose", args...)
+}
+
+func runCommand(command string, args ...string) {
+	cmd := exec.Command(command, args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()
-	checkerr(err)
+	checkErr(err)
 }
 
 func createEnvFile(path string) {
