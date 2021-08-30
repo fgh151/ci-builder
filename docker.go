@@ -26,8 +26,10 @@ func ComposeUp(path string) {
 
 	args = append(args, "--project-directory")
 	args = append(args, path)
-	args = append(args, "ComposeUp")
+	args = append(args, "up")
 	args = append(args, "-d")
+	args = append(args, "--force-recreate")
+	args = append(args, "--remove-orphans")
 
 	runCommand("docker-compose", args...)
 }
