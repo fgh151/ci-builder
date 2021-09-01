@@ -46,7 +46,7 @@ func serve() {
 			fmt.Printf("%+v", push.Ref)
 
 			path := push.Repository.Name + "/" + extractTagFromRef(push.Ref)
-			clone(path, push.Repository.GitURL)
+			clone(path, push.Repository.GitURL, push.Ref)
 			ComposeUp(path)
 
 		default:
