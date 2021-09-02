@@ -5,7 +5,15 @@ Docker
 
 #Installation
 
-##DNS server
+##Auto
+```shell
+docker-compose up
+```
+
+run builder app
+
+##Manual
+###DNS server
 ```shell
 docker run --detach --restart=always --name dns \
 -p 53:53/tcp \
@@ -13,14 +21,14 @@ docker run --detach --restart=always --name dns \
 --cap-add=NET_ADMIN \
 andyshinn/dnsmasq:2.76 --keep-in-foreground --address=/......box/127.0.0.1 --server=1.1.1.1
 ```
-##Nginx
+###Nginx
 ```shell
 docker run --detach --restart=always --name nginx \
 -v ./nginx.conf:/etc/nginx/nginx.conf:ro \
 -p 80:80 \
 nginx
 ```
-##Router
+###Router
 ```shell
 docker network create router
 

@@ -1,0 +1,54 @@
+version: '3'
+
+networks:
+  router:
+    external:
+      name: router
+
+services:
+  nginx:
+    image: nginx
+    env_file: .env
+    container_name: nginx
+    restart: always
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+    expose:
+      - 80:80
+    networks:
+      - router
+      - default
+    environment:
+      - ROUTER_PORT=${ROUTER_PORT}
+      - APP_PORT=${SERVER_PORT}
+      - SERVER_DOMAIN=${SERVER_DOMAIN}
+
+  dns:
+    image: andyshinn/dnsmasq:latest
+    container_name: dns
+    restart: always
+    expose:
+      - "53:53/tcp"
+      - "53:53/udp"
+    volumes:
+      - ./config/dnsmasq.conf:/etc/dnsmasq.conf
+    networks:
+      - router
+      - default
+
+  router:
+    image: traefik:v1.7.15-alpine
+    env_file: .env
+    container_name: router
+    restart: always
+    labels:
+      traefik.enable: '1'
+      traefik.frontend.rule: Host:router.box
+      traefik.port: '8080'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    expose:
+      - 80:${ROUTER_PORT}
+    networks:
+      - router
+      - default
